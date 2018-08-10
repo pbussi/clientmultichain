@@ -6,8 +6,23 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var cuentasRouter = require('./routes/cuentas');
+var session = require('express-session');
+var flash = require('req-flash');
+//const session = require('express-session');
 
 var app = express();
+
+
+
+app.use(session({
+secret: 'djhxcvxfgshajfgjhgsjhfgsakjeauytsdfy',
+resave: false,
+saveUninitialized: true
+}));
+
+app.use(flash({ locals: 'flash' }));
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -21,6 +36,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/cuentas', cuentasRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

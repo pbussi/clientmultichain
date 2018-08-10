@@ -3,10 +3,7 @@
    <%- include('header.js') %>
   <body>
     <%- include('top.js') %>
-
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-
+    <h1>Lista</h1>
     <table class="striped">
             <thead>
               <tr>
@@ -15,13 +12,15 @@
                   <th>Item Price</th>
               </tr>
             </thead>
-
             <tbody>
               <% lista.forEach(function(elemento) { %>
                   <tr><td><%= elemento.address %></td><td>Eclair</td><td>$0.87</td>  </tr>
               <% }); %>
-
             </tbody>
-          </table>
+    </table>
+      <a class="btn-floating btn-large waves-effect waves-light red" href="cuentas/crear"><i class="material-icons">add</i></a>
+
+  <%- include('footer.js') %>
+
   </body>
 </html>
