@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+   <%- include('header.js') %>
+  <body>
+    <%- include('top.js') %>
+
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+
+    <table class="striped">
+            <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Item Name</th>
+                  <th>Item Price</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <% lista.forEach(function(elemento) { %>
+                  <tr><td><%= elemento.address %></td><td>Eclair</td><td>$0.87</td>  </tr>
+              <% }); %>
+
+            </tbody>
+          </table>
+  </body>
+</html>
