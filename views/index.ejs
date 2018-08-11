@@ -7,14 +7,14 @@
     <table class="striped">
             <thead>
               <tr>
-                  <th>Name</th>
-                  <th>Item Name</th>
-                  <th>Item Price</th>
+                  <th>Usuario</th>
+                  <th>Cartera</th>
               </tr>
             </thead>
             <tbody>
               <% lista.forEach(function(elemento) { %>
-                  <tr><td><%= elemento.address %></td><td>Eclair</td><td>$0.87</td>  </tr>
+                  <tr><td><%= elemento.key %></td>
+                    <td><a href=cuentas/detalles/<%= elemento.publishers[0] %>><%= elemento.publishers[0] %></a></td></tr>
               <% }); %>
             </tbody>
     </table>
