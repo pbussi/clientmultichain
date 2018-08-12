@@ -13,8 +13,6 @@ var flash = require('req-flash');
 
 var app = express();
 
-
-
 app.use(session({
 secret: 'djhxcvxfgshajfgjhgsjhfgsakjeauytsdfy',
 resave: false,
