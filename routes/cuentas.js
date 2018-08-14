@@ -15,9 +15,9 @@ var options = {
 };
 
 router.post('/login', function(req, res, next) {
-    req.session.codigo_m =  req.body.codigo_m;
-    req.session.cartera_id =  req.body.cartera_id;
-  res.redirect('/cuentas/detalles/'+req.session.cartera_id);
+  req.session.codigo_m = req.body.codigo_m;
+  req.session.cartera_id = req.body.cartera_id;
+  res.redirect('/cuentas/detalles/' + req.session.cartera_id);
 });
 
 
@@ -40,7 +40,7 @@ router.get('/crear', function(req, res, next) {
 
 
 router.post('/crear', function(req, res, next) {
-  options.url = url + '/multichain/nuevo/'+ req.body.usuario_id+'/'+req.body.codigo_m;
+  options.url = url + '/multichain/nuevo/' + req.body.usuario_id + '/' + req.body.codigo_m;
   request(options, (error, response, body) => {
     if (error) {
       req.flash('errorMessage', error);
@@ -54,76 +54,86 @@ router.post('/crear', function(req, res, next) {
 
 
 router.get('/detalles/:cartera_id', function(req, res, next) {
-  options.url = url + '/multichain/saldo/'+ req.params.cartera_id;
+  options.url = url + '/multichain/saldo/' + req.params.cartera_id + "/" + req.session.codigo_m;
+  console.log(options.url)
   request(options, (error, response, body) => {
     if (error) {
       req.flash('errorMessage', error);
       res.redirect('/');
     } else {
-      var cuenta=JSON.parse(body).result[0];
-      options.url = url + '/multichain/movimientos/'+ req.params.cartera_id;
-      request(options, (error, response, body) => {
-        if (error) {
-          req.flash('errorMessage', error);
-          res.redirect('/');
-        } else {
-          var movimientos=JSON.parse(body);
-          res.render('cuentas_detalle',{cuenta: cuenta,movimientos:movimientos,address:req.params.cartera_id});
-        }
-      });
+      var cuenta = JSON.parse(body);
+      if (cuenta.error != null) {
+        req.flash('errorMessage', cuenta.error);
+        res.redirect('/');
+      } else {
+        options.url = url + '/multichain/movimientos/' + req.params.cartera_id+ "/" + req.session.codigo_m;
+        request(options, (error, response, body) => {
+          if (error) {
+            req.flash('errorMessage', error);
+            res.redirect('/');
+          } else {
+            var movimientos = JSON.parse(body);
+            res.render('cuentas_detalle', {
+              cuenta: cuenta.result[0],
+              movimientos: movimientos,
+              address: req.params.cartera_id
+            });
+          }
+        });
+      }
     }
-});
+  });
 });
 
 
 router.post('/agregar_movimiento', function(req, res, next) {
-  options.url = url + '/multichain/agregar_movimiento/'+
-        req.body.Cartera+'/'+req.body.Concepto+'/'+req.body.Importe+'/'+req.body.Factura+'/'+req.body.Acreedor;
+  options.url = url + '/multichain/agregar_movimiento/' +
+    req.body.Cartera + '/' + req.body.Concepto + '/' + req.body.Importe + '/' + req.body.Factura + '/' + req.body.Acreedor+ "/" + req.session.codigo_m;
   request(options, (error, response, body) => {
     if (error) {
       req.flash('errorMessage', error);
-        res.redirect('/cuentas/detalles/'+req.body.Cartera);
+      res.redirect('/cuentas/detalles/' + req.body.Cartera);
     } else {
-      if (response.statusCode=='404'){
+      if (response.statusCode == '404') {
         req.flash('errorMessage', 'Datos invalidos o incompletos');
-        res.redirect('/cuentas/detalles/'+req.body.Cartera);
-      }else{
-        var respuesta=JSON.parse(body);
-        if (respuesta.error!=null){
-            req.flash('errorMessage', respuesta.error.message);
-            res.redirect('/cuentas/detalles/'+req.body.Cartera);
+        res.redirect('/cuentas/detalles/' + req.body.Cartera);
+      } else {
+        var respuesta = JSON.parse(body);
+        if (respuesta.error != null) {
+          req.flash('errorMessage', respuesta.error.message);
+          res.redirect('/cuentas/detalles/' + req.body.Cartera);
         } else {
-            req.flash('successMessage', 'La cuenta ' + req.body.Cartera + ' se ha cargado con '+ req.body.Importe);
-            res.redirect('/cuentas/detalles/'+req.body.Cartera);
-          }
+          req.flash('successMessage', 'La cuenta ' + req.body.Cartera + ' se ha cargado con ' + req.body.Importe);
+          res.redirect('/cuentas/detalles/' + req.body.Cartera);
         }
       }
-   });
+    }
+  });
 });
 
 router.post('/quemar', function(req, res, next) {
-  options.url = url + '/multichain/quemar/'+
-        req.body.Cartera+'/'+req.body.Concepto+'/'+req.body.Importe+'/'+req.body.Factura;
+  options.url = url + '/multichain/quemar/' +
+    req.body.Cartera + '/' + req.body.Concepto + '/' + req.body.Importe + '/' + req.body.Factura+ "/" + req.session.codigo_m;
   request(options, (error, response, body) => {
     if (error) {
       req.flash('errorMessage', error);
-        res.redirect('/cuentas/detalles/'+req.body.Cartera);
+      res.redirect('/cuentas/detalles/' + req.body.Cartera);
     } else {
-      if (response.statusCode=='404'){
+      if (response.statusCode == '404') {
         req.flash('errorMessage', 'Datos invalidos o incompletos');
-        res.redirect('/cuentas/detalles/'+req.body.Cartera);
-      }else{
-        var respuesta=JSON.parse(body);
-        if (respuesta.error!=null){
-            req.flash('errorMessage', respuesta.error.message);
-            res.redirect('/cuentas/detalles/'+req.body.Cartera);
+        res.redirect('/cuentas/detalles/' + req.body.Cartera);
+      } else {
+        var respuesta = JSON.parse(body);
+        if (respuesta.error != null) {
+          req.flash('errorMessage', respuesta.error.message);
+          res.redirect('/cuentas/detalles/' + req.body.Cartera);
         } else {
-            req.flash('successMessage', 'De la cuenta ' + req.body.Cartera + ' se han quemado '+ req.body.Importe);
-            res.redirect('/cuentas/detalles/'+req.body.Cartera);
-          }
+          req.flash('successMessage', 'De la cuenta ' + req.body.Cartera + ' se han quemado ' + req.body.Importe);
+          res.redirect('/cuentas/detalles/' + req.body.Cartera);
         }
       }
-   });
+    }
+  });
 });
 
 module.exports = router;
