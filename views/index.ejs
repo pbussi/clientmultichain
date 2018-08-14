@@ -1,26 +1,45 @@
 <!DOCTYPE html>
 <html>
-   <%- include('header.js') %>
-  <body>
-    <%- include('top.js') %>
-    <h1>Lista</h1>
-    <table class="striped">
-            <thead>
-              <tr>
-                  <th>Usuario</th>
-                  <th>Cartera</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% lista.forEach(function(elemento) { %>
-                  <tr><td><%= elemento.key %></td>
-                    <td><a href=cuentas/detalles/<%= elemento.publishers[0] %>><%= elemento.publishers[0] %></a></td></tr>
-              <% }); %>
-            </tbody>
-    </table>
-      <a class="btn-floating btn-large waves-effect waves-light red" href="cuentas/crear"><i class="material-icons">add</i></a>
+<%- include('header.js') %>
 
-  <%- include('footer.js') %>
+    <body>
+        <%- include('top.js') %>
+            <h1>Lista</h1>
+            <table class="striped">
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Cartera</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% lista.forEach(function(elemento) { %>
+                        <tr>
+                            <td>
+                                <%= elemento.key %>
+                            </td>
+                            <form action='/cuentas/login' method=POST >
+                                <td>
+                                    <%= elemento.publishers[0] %>
+                                </td>
+                                <td>
+                                    <input type=password name=codigo_m />
+                                </td>
+                                <td>
+                                  <input type=hidden name=cartera_id value=<%= elemento.publishers[0] %> />
+                                  <button class="btn waves-effect waves-light" type="submit" name="action">Ingresar
+                                  <i class="material-icons right">send</i>
+                                </button>
+                                </td>
+                              </form>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
+            <a class="btn-floating btn-large waves-effect waves-light red" href="cuentas/crear"><i class="material-icons">add</i></a>
 
-  </body>
+            <%- include('footer.js') %>
+
+    </body>
+
 </html>

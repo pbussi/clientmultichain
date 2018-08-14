@@ -3,7 +3,8 @@ var router = express.Router();
 const request = require('request');
 
 
-var url = "http://192.168.1.107:3000"
+
+var url = "http://localhost:3000"
 var options = {
   url: "",
   rejectUnhauthorized: 'false',
@@ -12,6 +13,13 @@ var options = {
     "content-type": "text/plain"
   }
 };
+
+router.post('/login', function(req, res, next) {
+    req.session.codigo_m =  req.body.codigo_m;
+    req.session.cartera_id =  req.body.cartera_id;
+  res.redirect('/cuentas/detalles/'+req.session.cartera_id);
+});
+
 
 router.get('/', function(req, res, next) {
   options.url = url + '/multichain/cuentas';
@@ -32,7 +40,7 @@ router.get('/crear', function(req, res, next) {
 
 
 router.post('/crear', function(req, res, next) {
-  options.url = url + '/multichain/nuevo/'+ req.body.usuario_id;
+  options.url = url + '/multichain/nuevo/'+ req.body.usuario_id+'/'+req.body.codigo_m;
   request(options, (error, response, body) => {
     if (error) {
       req.flash('errorMessage', error);

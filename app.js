@@ -11,13 +11,16 @@ var session = require('express-session');
 var flash = require('req-flash');
 //const session = require('express-session');
 
-var app = express();
+var session = require('express-session')
+var FileStore = require('session-file-store')(session);
 
-app.use(session({
-secret: 'djhxcvxfgshajfgjhgsjhfgsakjeauytsdfy',
-resave: false,
-saveUninitialized: true
-}));
+var app = express();
+var sess = {
+  store: new FileStore(),
+  secret: 'keyboard cat',
+  cookie: {}
+}
+app.use(session(sess));
 
 app.use(flash({ locals: 'flash' }));
 
