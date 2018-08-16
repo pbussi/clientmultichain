@@ -4,7 +4,7 @@ const request = require('request');
 
 
 
-var url = "http://localhost:3000"
+var url = "https://wsmultichain.herokuapp.com"
 var options = {
   url: "",
   rejectUnhauthorized: 'false',
