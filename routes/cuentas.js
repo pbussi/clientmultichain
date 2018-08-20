@@ -111,6 +111,34 @@ router.post('/agregar_movimiento', function(req, res, next) {
   });
 });
 
+router.post('/transferir', function(req, res, next) {
+  options.url = url + '/multichain/transferir/' +
+    req.body.Cartera + '/'+req.body.Destino + '/' + req.body.Concepto + '/' + req.body.Importe +
+     '/' + req.body.Factura + '/' + req.body.Acreedor+ "/" + req.session.codigo_m;
+  request(options, (error, response, body) => {
+    if (error) {
+      req.flash('errorMessage', error);
+      res.redirect('/cuentas/detalles/' + req.body.Cartera);
+    } else {
+      if (response.statusCode == '404') {
+        req.flash('errorMessage', 'Datos invalidos o incompletos');
+        res.redirect('/cuentas/detalles/' + req.body.Cartera);
+      } else {
+        var respuesta = JSON.parse(body);
+        if (respuesta.error != null) {
+          req.flash('errorMessage', respuesta.error.message);
+          res.redirect('/cuentas/detalles/' + req.body.Cartera);
+        } else {
+          req.flash('successMessage', 'Se ha transferido ' + req.body.Importe + ' a ' + req.body.Destino);
+          res.redirect('/cuentas/detalles/' + req.body.Cartera);
+        }
+      }
+    }
+  });
+});
+
+
+
 router.post('/quemar', function(req, res, next) {
   options.url = url + '/multichain/quemar/' +
     req.body.Cartera + '/' + req.body.Concepto + '/' + req.body.Importe + '/' + req.body.Factura+ "/" + req.session.codigo_m;
