@@ -5,6 +5,7 @@ const request = require('request');
 
 
 var url = "https://wsmultichain.herokuapp.com"
+//var url = "http://localhost"
 var options = {
   url: "",
   rejectUnhauthorized: 'false',
@@ -40,7 +41,7 @@ router.get('/crear', function(req, res, next) {
 
 
 router.post('/crear', function(req, res, next) {
-  options.url = url + '/multichain/nuevo/' + req.body.usuario_id + '/' + req.body.codigo_m;
+  options.url = url + '/multichain/nuevo/' + req.body.usuario_id + '/' + req.body.codigo_m+'/solicitud123';
   request(options, (error, response, body) => {
     if (error) {
       req.flash('errorMessage', error);
@@ -54,8 +55,7 @@ router.post('/crear', function(req, res, next) {
 
 
 router.get('/detalles/:cartera_id', function(req, res, next) {
-  options.url = url + '/multichain/saldo/' + req.params.cartera_id + "/" + req.session.codigo_m;
-  console.log(options.url)
+  options.url = url + '/multichain/saldo/' + req.params.cartera_id + "/" + req.session.codigo_m+"/solicitud123";
   request(options, (error, response, body) => {
     if (error) {
       req.flash('errorMessage', error);
@@ -66,7 +66,7 @@ router.get('/detalles/:cartera_id', function(req, res, next) {
         req.flash('errorMessage', cuenta.error);
         res.redirect('/');
       } else {
-        options.url = url + '/multichain/movimientos/' + req.params.cartera_id+ "/" + req.session.codigo_m;
+        options.url = url + '/multichain/movimientos/' + req.params.cartera_id+ "/" + req.session.codigo_m+'/solicitud123';
         request(options, (error, response, body) => {
           if (error) {
             req.flash('errorMessage', error);
@@ -75,7 +75,7 @@ router.get('/detalles/:cartera_id', function(req, res, next) {
             var movimientos = JSON.parse(body);
             res.render('cuentas_detalle', {
               cuenta: cuenta.result[0],
-              movimientos: movimientos,
+              movimientos: movimientos.movimientos,
               address: req.params.cartera_id
             });
           }
@@ -88,7 +88,8 @@ router.get('/detalles/:cartera_id', function(req, res, next) {
 
 router.post('/agregar_movimiento', function(req, res, next) {
   options.url = url + '/multichain/agregar_movimiento/' +
-    req.body.Cartera + '/' + req.body.Concepto + '/' + req.body.Importe + '/' + req.body.Factura + '/' + req.body.Acreedor+ "/" + req.session.codigo_m;
+    req.body.Cartera + '/' + req.body.Concepto + '/' + req.body.Importe + '/' +
+     req.body.Factura + '/' + req.body.Acreedor+ "/" + req.session.codigo_m+'/solicitud123';
   request(options, (error, response, body) => {
     if (error) {
       req.flash('errorMessage', error);
@@ -114,7 +115,7 @@ router.post('/agregar_movimiento', function(req, res, next) {
 router.post('/transferir', function(req, res, next) {
   options.url = url + '/multichain/transferir/' +
     req.body.Cartera + '/'+req.body.Destino + '/' + req.body.Concepto + '/' + req.body.Importe +
-     '/' + req.body.Factura + '/' + req.body.Acreedor+ "/" + req.session.codigo_m;
+     '/' + req.body.Factura + '/' + req.body.Acreedor+ "/" + req.session.codigo_m+"/solicitud123";
   request(options, (error, response, body) => {
     if (error) {
       req.flash('errorMessage', error);
@@ -141,7 +142,8 @@ router.post('/transferir', function(req, res, next) {
 
 router.post('/quemar', function(req, res, next) {
   options.url = url + '/multichain/quemar/' +
-    req.body.Cartera + '/' + req.body.Concepto + '/' + req.body.Importe + '/' + req.body.Factura+ "/" + req.session.codigo_m;
+    req.body.Cartera + '/' + req.body.Concepto + '/' + req.body.Importe +
+     '/' + req.body.Factura+ "/" + req.session.codigo_m+"/solicitud_id";
   request(options, (error, response, body) => {
     if (error) {
       req.flash('errorMessage', error);
